@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/animate.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            touch-action: none;
+        }
+        
+        ul {
+            list-style: none;
+        }
+        
+        .large {
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: #000;
+            display: none;
+            padding-top: 200px;
+        }
+        
+        .large_pic {
+            width: 100%;
+            height: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <ul id="container">
+
+    </ul>
+    <div id="large_container" class="large"></div>
+    <script src="./js/zepto.js"></script>
+    <script>
+        // 渲染小图片
+        // 定义图片总数
+        var num = 17;
+        render(num)
+
+        function render(picNum) {
+            /* 
+                param picNum 图片的数量
+            */
+            // 获取屏幕的宽度
+            var screenW = $(window).width()
+                // 定义图片之间的间距
+            var paddingW = 2
+
+            var picW = Math.floor((screenW - paddingW * 8) / 4)
+            var temp = '';
+            for (var i = 1; i <= picNum; i++) {
+                // 定义图片的路径
+                var picPath = './img/' + i + '.jpg'
+                temp += '<li id_num="' + i + '" style="width:' + picW + 'px;height:' + picW + 'px;float:left;padding:2px;"><img style = "width:100%;height:100%;" src="' + picPath + '" /></li>'
+            }
+            $("#container").html(temp)
+        }
+        $("li").addClass("animated bounceIn")
+            // 定义大图片id_num
+        var id_num_large;
+        // 为每张图片盒子添加事件
+        $("#container").delegate("li", "tap", function() {
+                console.log(11)
+                    // 跳转到小图片对应的大图片
+                var id_num = id_num_large = $(this).attr("id_num")
+                loadImg(id_num)
+                $("#container").undelegate("li", "tap")
+            })
+            // 加载图片的方法
+        function loadImg(id, callback) {
+            // 定义大图片的路径
+            var picPathLarge = "./img/" + id + ".large.jpg"
+            $("#large_container").html("<img id = 'large_img' src='" + picPathLarge + "' class='large_pic'/>").show()
+            callback && callback();
+        }
+        // 为大图片注册事件
+        $("#large_container").tap(function() {
+            $(this).hide();
+        }).swipeLeft(function() {
+            id_num_large++;
+            if (id_num_large > num) {
+                id_num_large = num
+            } else {
+                loadImg(id_num_large, function() {
+                    $("#large_img").addClass("animated bounceInRight")
+                })
+            }
+        }).swipeRight(function() {
+            id_num_large--;
+            if (id_num_large < 1) {
+                id_num_large = 1
+            } else {
+                loadImg(id_num_large, function() {
+                    $("#large_img").addClass("animated bounceInLeft")
+                })
+            }
+        })
+    </script>
+</body>
+
+</html>
