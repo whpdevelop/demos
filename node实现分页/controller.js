@@ -23,3 +23,72 @@ module.exports = {
         })
     }
 }
+
+
+
+/*
+
+查询功能
+let sql = 'select * from book where id = ?';
+let data = [6];
+
+// 操作数据库
+connection.query(sql,data, function(error, results, fields) {
+    if (error) throw error;
+    console.log(results[0].name);
+    // console.log(results);
+}); */
+
+/* 
+ * 更新功能
+ let sql = 'update book set name=?,author=?,category=?,description=? where id=?';
+let data = ['浪潮之巅','吴军','计算机','IT巨头的兴衰史',8];
+
+// 操作数据库
+connection.query(sql,data, function(error, results, fields) {
+    if (error) throw error;
+    // console.log(results);
+    if(results.affectedRows == 1){
+        console.log('更新成功');
+    }
+});
+ * 
+ */
+
+/* 
+    插入功能
+    let sql = 'insert into book set ?'
+let data = {
+    name : '明朝那些事',
+    author : '当年明月',
+    category : '文学',
+    description : '明朝的历史'
+}
+// 操作数据库
+connection.query(sql,data, function(error, results, fields) {
+    if (error) throw error;
+    // console.log(results);
+    if(results.affectedRows == 1){
+        console.log('数据插入成功');
+    }
+});
+ 
+
+
+ */
+
+
+/* 
+ let sql = 'delete from book where id = ?';
+let data = [9];
+
+// 操作数据库
+connection.query(sql,data, function(error, results, fields) {
+    if (error) throw error;
+    // console.log(results);
+    if(results.affectedRows == 1){
+        console.log('删除成功');
+    }
+});
+ 
+ */
