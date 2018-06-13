@@ -1,0 +1,49 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.w {
+    width: 800px;
+    margin: 0 auto;
+}
+
+a {
+    color: #000;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
+.container {
+    background-color: #f6f6f6;
+}
+
+.container .select a {
+    display: inline-block;
+    background-color: #fff;
+    padding: 3px 5px;
+    margin-right: 10px;
+}
+
+.container .item {
+    display: flex;
+}
+
+.container .item img {
+    width: 40px;
+    height: 40px;
+}
+
+.container .item .list ul {
+    display: flex;
+}
+
+.container .item .list ul li {
+    padding-left: 10px;
+}
