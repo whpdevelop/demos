@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/animate.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+        
+        li {
+            list-style: none;
+        }
+        
+        .small_img img {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .large_img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: none;
+        }
+        
+        .large_img>img {
+            width: 100%;
+            height: 200px;
+            position: absolute;
+            top: 50%;
+            margin-top: -100px;
+        }
+    </style>
+    <script src="./js/zepto.120.js"></script>
+    <script src="./js/touch.js"></script>
+    <script src="./js/art-template.js"></script>
+</head>
+
+<body>
+    <ul class=" small_img ">
+        <!-- <li>
+            <img src=" " alt=" ">
+        </li> -->
+    </ul>
+    <div class="large_img ">
+        <!-- <img src="./img/1.large.jpg " alt=" "> -->
+    </div>
+
+    <script id="temp" type="text/html">
+        <% for(var i=1;i<=small_img_num;i++) { %>
+            <li id_num=<%=i %> style="width:
+                <%=smallImgW%>px;height:
+                    <%=smallImgW %>px;padding:
+                        <%=paddingW%>px;float:left; ">
+                            <img src="./img/<%= i %>.jpg" alt=" ">
+            </li>
+            <% } %>
+
+    </script>
+    <script>
+        $(function() {
+            // 定义图片的数据
+            var small_img_num = 17
+                // 渲染小图片
+            render(small_img_num)
+                // 实现渲染函数
+            function render(small_img_num) {
+                // 获取屏幕的宽度
+                var screenW = $(window).width();
+                var paddingW = 2;
+                var smallImgW = Math.floor((screenW - paddingW * 8) / 4)
+                    // var temp = ''
+                    // for (var i = 1; i <= small_img_num; i++) {
+                    //     temp += '<li id_num="' + i + '" style="width: ' + smallImgW + 'px;height: ' + smallImgW + 'px;padding: ' + paddingW + 'px;float:left; ">' +
+                    //         '    <img  src="./img/' + i + '.jpg " alt=" ">' +
+                    //         '</li>';
+                    // }
+
+                var html_str = template('temp', {
+                        small_img_num: small_img_num,
+                        smallImgW: smallImgW,
+                        paddingW: paddingW
+                    })
+                    // $('.small_img').append(temp)
+                $('.small_img').append(html_str)
+
+
+            }
+            $('li').addClass('animated bounceIn')
+
+            //
+            var large_num;
+            $('li').on('click', function() {
+                var id_num = large_num = $(this).attr('id_num')
+                    // console.log(id_num)
+                load_large_img(id_num)
+            })
+
+            // 加载大图片的方法
+            function load_large_img(num) {
+                $('.large_img').html('<img src="./img/' + num + '.large.jpg " alt=" ">').show()
+            }
+
+            $('.large_img').swipeLeft(function() {
+                large_num++
+                if (large_num > 17) {
+                    large_num = 17
+                }
+                load_large_img(large_num)
+            }).swipeRight(function() {
+                large_num--
+                if (large_num < 1) {
+                    large_num = 1
+                }
+                load_large_img(large_num)
+            })
+        })
+    </script>
+</body>
+
+</html>

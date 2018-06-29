@@ -13,102 +13,134 @@
             padding: 0;
         }
         
+        html,
         body {
-            touch-action: none;
+            width: 100%;
+            height: 100%;
         }
         
-        ul {
+        li {
             list-style: none;
         }
         
-        .large {
+        .smallImg {
             width: 100%;
             height: 100%;
-            z-index: 1;
-            position: absolute;
-            top: 0;
-            left: 0;
-            background: #000;
-            display: none;
-            padding-top: 200px;
         }
         
-        .large_pic {
+        li {
+            /* padding: 2px; */
+        }
+        
+        .largeImg {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            display: none;
+            background-color: #000;
+        }
+        
+        .largeImg img {
             width: 100%;
             height: 200px;
+            position: absolute;
+            top: 50%;
+            margin-top: -100px;
         }
     </style>
+    <script src="./js/zepto.120.js"></script>
+    <script src="./js/touch.js"></script>
+    <script src="./js/art-template.js"></script>
 </head>
 
 <body>
-    <ul id="container">
-
+    <ul class="small_img">
+        <!-- <li>
+            <img src="./img/1.jpg" alt="">
+        </li>
+        <li>
+            <img src="./img/1.jpg" alt="">
+        </li>
+        <li>
+            <img src="./img/1.jpg" alt="">
+        </li> -->
     </ul>
-    <div id="large_container" class="large"></div>
-    <script src="./js/zepto.js"></script>
+    <div class="largeImg">
+        <!-- <img src="./img/1.large.jpg" alt=""> -->
+    </div>
+
+    <script type="text/html" id="s_img">
+
+        <% for(var i=1;i<=small_num;i++){ %>
+            <li id_num=<%=i %> style="width:
+                <%=smallImgW %>px;height:
+                    <%=smallImgW %>px;float:left;padding:
+                        <%= paddingW%>px;" class="animated bounceIn">
+                            <img class="smallImg" src="./img/<%=i %>.jpg" alt="">
+            </li>
+            <% } %>
+    </script>
     <script>
-        // 渲染小图片
-        // 定义图片总数
-        var num = 17;
-        render(num)
+        $(function() {
+            // 定义小图片的个数
+            var small_num = 17;
+            // 调用函数渲染小图片
+            renderImg()
+                // 实现渲染小图片
+            function renderImg() {
+                var screenW = $(window).width()
+                var paddingW = 2
+                var smallImgW = Math.floor((screenW - paddingW * 8) / 4)
+                    // var temp = ''
+                    // for (var i = 1; i <= small_num; i++) {
+                    //     temp += '<li id_num = ' + i + ' style="width:' + smallImgW + 'px;height:' + smallImgW + 'px;float:left;">' +
+                    //         '   <img class="smallImg" src="./img/' + i + '.jpg" alt="">' +
+                    //         '</li>'
+                    // }
+                var html_str = template('s_img', {
+                    small_num: small_num,
+                    smallImgW: smallImgW,
+                    paddingW: paddingW
 
-        function render(picNum) {
-            /* 
-                param picNum 图片的数量
-            */
-            // 获取屏幕的宽度
-            var screenW = $(window).width()
-                // 定义图片之间的间距
-            var paddingW = 2
-
-            var picW = Math.floor((screenW - paddingW * 8) / 4)
-            var temp = '';
-            for (var i = 1; i <= picNum; i++) {
-                // 定义图片的路径
-                var picPath = './img/' + i + '.jpg'
-                temp += '<li id_num="' + i + '" style="width:' + picW + 'px;height:' + picW + 'px;float:left;padding:2px;"><img style = "width:100%;height:100%;" src="' + picPath + '" /></li>'
+                })
+                $('.small_img').append(html_str)
+                    // $('.small_img').append(temp)
             }
-            $("#container").html(temp)
-        }
-        $("li").addClass("animated bounceIn")
-            // 定义大图片id_num
-        var id_num_large;
-        // 为每张图片盒子添加事件
-        $("#container").delegate("li", "tap", function() {
-                console.log(11)
-                    // 跳转到小图片对应的大图片
-                var id_num = id_num_large = $(this).attr("id_num")
-                loadImg(id_num)
-                $("#container").undelegate("li", "tap")
+            // 当li标签渲染时添加动画
+            $("li").addClass("animated bounceIn")
+                // 定义大图片的位置索引
+            var large_img_num;
+            $('li').on('click', function() {
+                    var id_num = large_img_num = $(this).attr('id_num')
+                        // console.log(id_num)
+
+                    // 加载大图片
+                    loadLargeImg(id_num)
+                })
+                // 加载大图片方法实现
+
+            function loadLargeImg(id_num) {
+                $('.largeImg').html('<img src="./img/' + id_num + '.large.jpg" alt="">').show()
+            }
+
+            // 给大图片注册滑动事件 实现切换图片
+            $('.largeImg').swipeLeft(function() {
+                large_img_num++
+                if (large_img_num > 17) {
+                    alert('亲,没有更多了')
+                    return
+                }
+                loadLargeImg(large_img_num)
+            }).swipeRight(function() {
+                large_img_num--
+                if (large_img_num < 1) {
+                    alert('亲,没有更多了')
+                    return
+                }
+                loadLargeImg(large_img_num)
+            }).tap(function() {
+                $(this).hide()
             })
-            // 加载图片的方法
-        function loadImg(id, callback) {
-            // 定义大图片的路径
-            var picPathLarge = "./img/" + id + ".large.jpg"
-            $("#large_container").html("<img id = 'large_img' src='" + picPathLarge + "' class='large_pic'/>").show()
-            callback && callback();
-        }
-        // 为大图片注册事件
-        $("#large_container").tap(function() {
-            $(this).hide();
-        }).swipeLeft(function() {
-            id_num_large++;
-            if (id_num_large > num) {
-                id_num_large = num
-            } else {
-                loadImg(id_num_large, function() {
-                    $("#large_img").addClass("animated bounceInRight")
-                })
-            }
-        }).swipeRight(function() {
-            id_num_large--;
-            if (id_num_large < 1) {
-                id_num_large = 1
-            } else {
-                loadImg(id_num_large, function() {
-                    $("#large_img").addClass("animated bounceInLeft")
-                })
-            }
         })
     </script>
 </body>
